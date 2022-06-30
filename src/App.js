@@ -1,23 +1,45 @@
-import logo from './logo.svg';
+import React, {useState} from "react";
 import './App.css';
+import Header from './Header';
+import Footer from './Footer';
+import InputArea from './InputArea';
+import Note from './Note';
 
 function App() {
+  //a list to store our notes
+  const [noteList, updateNoteList] = useState([]);
+
+  //add to list - passed to the input area
+  function AddNote(newNote){
+    updateNoteList(prevNotes => {
+      return [...prevNotes, newNote];
+    });
+  }
+
+  function deleteNote(id) {
+    updateNoteList(prevNotes => {
+      return prevNotes.filter((note, index) => {
+        return index !== id;
+      });
+    });
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <InputArea onAdd={AddNote} />
+
+      {noteList.map((note, index) => (
+            <Note
+              key={index}
+              id={index}
+              title = {note.title}
+              content = {note.content}
+              onChecked={deleteNote}
+            />
+          ))}
+      <Footer />
     </div>
   );
 }
